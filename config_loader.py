@@ -1,19 +1,16 @@
 from pathlib import Path
+
 import yaml
 
-def load_config(config_path=None):
-    if config_path is None:
-        config_path = Path(__file__).parent / "cfg.yaml"
 
-    if not Path(config_path).exists():
-        raise FileNotFoundError(f"Файл конфигурации {config_path} не найден.")
+def load_config(config_path: str | None = None) -> dict:
+    path = Path(config_path) if config_path else Path(__file__).parent / "cfg.yaml"
 
-    try:
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-    except yaml.YAMLError as e:
-        raise ValueError(f"Ошибка при загрузке YAML-файла {config_path}: {e}")
+    if not path.exists():
+        raise FileNotFoundError(f"Config not found: {path}")
 
-    return config
+    with open(path) as f:
+        return yaml.safe_load(f)
 
-train_config = load_config()
+
+train_config: dict = load_config()
